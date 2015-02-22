@@ -1,5 +1,6 @@
 require 'date'
 require 'pry'
+require 'yaml'
 
 class Person
   attr_accessor :dob,:fname,:sname
@@ -23,6 +24,7 @@ class Person
   end
 
   def add_email(index)
+    raise 'Incorrect format of email' unless index.match(/^(\w+(\.\w+)?\@\w+\.((com)|(co\.uk))$)/)
     @emails << index
   end
 
@@ -31,6 +33,7 @@ class Person
   end
 
   def add_phone_numbers(index)
+    raise 'Incorrect format of phone number' unless index.match(/((020[\d]{8})|(07[\d]{9}))/)
     @phone_numbers << index
   end
 
@@ -87,6 +90,23 @@ class AddressBook
           @contacts.delete(i)
         end
       end
+    end
+  end
+
+  def import(file)
+    newfile = File.open(file)
+    data = YAML.load(newfile)
+    data["people"].each_with_index do |k,i|
+      person = Person.new(data["people"][i]["fname"],data["people"][i]["surname"],data["people"][i]["dob"])
+      
+      data["people"][i]["emails"].each do |k|
+        person.add_email(k)
+      end
+
+      data["people"][i]["phones"].each do |k|
+        person.add_phone_numbers(k)
+      end
+      add(person)
     end
   end
 end

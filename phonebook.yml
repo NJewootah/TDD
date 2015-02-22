@@ -1,0 +1,17 @@
+people:
+  - fname: Joe
+    surname: Bloggs
+    dob: 1 Jan 1990
+    emails:
+      - joe@example.com
+      - joe.bloggs@work.com
+    phones:
+      - 02081234568
+      - 02081234567
+  - fname: Andy
+    surname: Nother
+    dob: 2 Jan 1995
+    emails:
+      - andy@example.com
+    phones:
+      - 02081255568

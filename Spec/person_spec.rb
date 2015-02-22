@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'yaml'
 
 describe 'Person' do
 
@@ -24,16 +25,15 @@ describe 'Person' do
       expect(person.dob).to be_nil
     end
 
-    #it "should raise an error if full name is not provided" do
-      #expect(Person.new(fname)).to raise_error(ArgumentError)
-      #expect(Person.new('',sname)).to raise_error(ArgumentError)
-    #end
-
     it "should allow emails to be added to personal information" do
       expect(person.emails).to eq(Array.new)
       person.add_email(email)
       expect(person.emails[0]).to eq(email)
       expect(person.emails[1]).to be_nil
+    end
+
+    it "should raise an error when the wrong format of email is entered" do
+      expect{person.add_email'Incorrect format of email'}.to raise_error
     end
 
     it "should allow emails to be removed from personal information" do
@@ -47,6 +47,10 @@ describe 'Person' do
       person.add_phone_numbers(phone)
       expect(person.phone_numbers[0]).to eq(phone)
       expect(person.phone_numbers[1]).to be_nil
+    end
+
+    it "should raise an error when the wrong format of phone is entered" do
+      expect{person.add_phone_numbers'Incorrect format of phone number'}.to raise_error
     end
 
     it "should allow phone numbers to be removed from personal information" do
@@ -93,18 +97,18 @@ describe 'AddressBook' do
       expect(book.contacts[0]).to eq(person)
     end
 
-    #it "should display all entries of contacts" do
-      #book = AddressBook.new
-      #book.add(person)
-      #book.add(person2)
-      #expect(book.list[0]).to eq(person.fullname)
-      #expect(book.list[1]).to eq(person2.fullname)
-    #end
-
     it "should allow the removal of contacts" do
       book = AddressBook.new
       book.remove('Joe')
       expect(book.contacts).not_to include('Joe Bloggs')
     end
+
+    it "should import a yaml file" do
+      book = AddressBook.new
+      book.import('phonebook.yml')
+      expect(book.contacts[0].fname).to eq('Joe')
+      expect(book.contacts[1].fname).to eq('Andy')
+    end
+
   end
 end
